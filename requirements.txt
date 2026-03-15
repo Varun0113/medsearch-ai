@@ -1,0 +1,11 @@
+torch
+transformers
+sentence-transformers
+pandas
+numpy
+faiss-cpu
+scikit-learn
+fastapi
+uvicorn[standard]
+pydantic
+langdetect

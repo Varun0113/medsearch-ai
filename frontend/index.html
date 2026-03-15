@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MedSearch AI</title>
+  <link rel="icon" type="image/svg+xml" href="/frontend/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/frontend/assets/styles.css">
+</head>
+<body>
+  <div class="page-container">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <p class="eyebrow">Multilingual Medical Information AI</p>
+          <h1 id="site-title">MedSearch AI</h1>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <label class="sr-only" for="language-select">Language</label>
+        <select id="language-select" class="language-select">
+          <option value="en">English</option>
+          <option value="hi">Hindi</option>
+          <option value="gu">Gujarati</option>
+        </select>
+      </div>
+    </header>
+
+    <div class="alert-banner" id="banner-text">
+      AI Health Information System. Not a medical prescription system.
+    </div>
+
+    <main class="layout">
+      <section class="hero-panel hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow" id="hero-kicker">Safety-first clinical information</p>
+          <h2 id="hero-title">Describe symptoms to review possible conditions, treatment categories, medicine information, and safety warnings.</h2>
+          <p id="hero-description">
+            This assistant provides multilingual medical information for educational use. It does not prescribe medicines.
+          </p>
+        </div>
+
+        <form id="query-form" class="query-card">
+          <label class="field-label" for="query-input" id="query-label">Describe symptoms</label>
+          <textarea
+            id="query-input"
+            class="query-input"
+            rows="4"
+            placeholder="Example: Fever and headache for 2 days"
+          ></textarea>
+
+          <div class="filters-grid">
+            <label class="field-group">
+              <span id="age-label">Age</span>
+              <input id="age-input" type="number" min="0" max="120" placeholder="Optional">
+            </label>
+
+            <label class="field-group">
+              <span id="gender-label">Gender</span>
+              <select id="gender-input">
+                <option value="">Optional</option>
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+                <option value="non-binary">Non-binary</option>
+                <option value="prefer_not_to_say">Prefer not to say</option>
+              </select>
+            </label>
+
+            <label class="field-group">
+              <span id="pregnancy-label">Pregnancy status</span>
+              <select id="pregnancy-input">
+                <option value="">Optional</option>
+                <option value="pregnant">Pregnant</option>
+                <option value="not_pregnant">Not pregnant</option>
+                <option value="unknown">Unsure</option>
+              </select>
+            </label>
+
+            <label class="field-group field-group-wide">
+              <span id="allergies-label">Allergies</span>
+              <input id="allergies-input" type="text" placeholder="Comma separated, for example penicillin, aspirin">
+            </label>
+
+            <label class="field-group field-group-wide">
+              <span id="conditions-label">Existing conditions</span>
+              <input id="conditions-input" type="text" placeholder="Comma separated, for example kidney disease, stomach ulcer">
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" id="submit-button" class="primary-button">Analyze</button>
+            <button type="button" id="reset-button" class="secondary-button">Reset</button>
+          </div>
+          <p class="helper-text" id="helper-text">
+            Supported languages: English, Hindi, and Gujarati.
+          </p>
+        </form>
+      </section>
+
+      <section id="results-panel" class="results-panel hidden">
+        <div class="results-grid main-grid">
+          <div id="urgent-card" class="urgent-card span-2 hidden"></div>
+          <article class="panel result-card summary-panel">
+            <div class="panel-header">
+              <h3 id="summary-heading">Assessment summary</h3>
+              <span id="confidence-badge" class="confidence-badge"></span>
+            </div>
+            <p class="summary-query"><span id="summary-query-label">Processed query</span>: <span id="summary-query-value"></span></p>
+            <div>
+              <h4 id="symptoms-heading">Detected symptoms</h4>
+              <div id="symptom-list" class="chip-list"></div>
+            </div>
+          </article>
+
+          <article class="panel result-card">
+            <div class="panel-header">
+              <h3 id="conditions-heading">Possible conditions</h3>
+            </div>
+            <div id="conditions-list" class="stack-list"></div>
+          </article>
+
+          <article class="panel result-card">
+            <div class="panel-header">
+              <h3 id="treatment-heading">Treatment options</h3>
+            </div>
+            <ul id="treatment-list" class="detail-list"></ul>
+          </article>
+
+          <article class="panel result-card">
+            <div class="panel-header">
+              <h3 id="homecare-heading">Home care</h3>
+            </div>
+            <ul id="homecare-list" class="detail-list"></ul>
+          </article>
+
+          <article class="panel result-card span-2">
+            <div class="panel-header">
+              <h3 id="medicines-heading">Common medicines used</h3>
+            </div>
+            <div class="medicine-columns">
+              <div>
+                <h4 class="section-subtitle">OTC</h4>
+                <div id="otc-list" class="stack-list"></div>
+              </div>
+              <div>
+                <h4 class="section-subtitle" id="prescription-label">Prescription</h4>
+                <div id="prescription-list" class="stack-list"></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel result-card">
+            <div class="panel-header">
+              <h3 id="warnings-heading">Warnings</h3>
+            </div>
+            <ul id="warnings-list" class="detail-list"></ul>
+          </article>
+
+          <article class="panel result-card">
+            <div class="panel-header">
+              <h3 id="interactions-heading">Interaction warnings</h3>
+            </div>
+            <div id="interactions-list" class="stack-list"></div>
+          </article>
+
+          <article class="panel result-card disclaimer-panel span-2">
+            <div class="panel-header">
+              <h3 id="disclaimer-heading">Medical disclaimer</h3>
+            </div>
+            <pre id="disclaimer-text" class="disclaimer-text"></pre>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/frontend/assets/app.js"></script>
+</body>
+</html>
